@@ -2,6 +2,8 @@
 
 Classify a WAV voice recording as male or female using 13 mean MFCC features and a scikit-learn Random Forest model.
 
+Live demo: https://voice.vorextdigitalai.com (available after deployment and DNS setup)
+
 > **Model note:** If you train without audio in both dataset folders, the training script creates a synthetic placeholder so the app can start. Its predictions are not meaningful. Add a properly labeled dataset and retrain before presenting results as real classifications.
 
 ## Features

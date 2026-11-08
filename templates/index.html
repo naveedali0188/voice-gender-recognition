@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="Upload a short WAV audio clip and explore an AI voice gender classification by Vorext Digital AI.">
+  <title>Gender Recognition from Voice | Vorext Digital AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="app-card" aria-labelledby="page-title">
+      <header class="app-header">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect x="11" y="4" width="10" height="17" rx="5" stroke="currentColor" stroke-width="2.4"/>
+            <path d="M7 15v1a9 9 0 0 0 18 0v-1M16 25v4m-5 0h10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1 id="page-title">Gender Recognition from Voice</h1>
+        <p>Upload a short audio clip and let AI detect the gender</p>
+      </header>
+
+      {% if is_placeholder_model %}
+      <p class="model-notice" role="note">Demo model: predictions are not meaningful until trained with labeled voice recordings.</p>
+      {% endif %}
+
+      <form id="upload-form">
+        <input id="audio-file" class="visually-hidden" type="file" name="file" accept=".wav,audio/wav" aria-label="Choose a WAV audio file">
+        <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-controls="audio-file" aria-describedby="upload-hint">
+          <svg class="upload-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 31V8m0 0-8 8m8-8 8 8M9 29v9a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2v-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="drop-title">Drag and drop your audio here</p>
+          <p class="drop-subtitle">or <span>browse files</span></p>
+          <p id="upload-hint" class="file-hint">WAV format only · Maximum size 16 MB</p>
+          <div id="selected-file" class="selected-file" hidden>
+            <span id="file-name"></span>
+            <button id="remove-file" class="remove-file" type="button" aria-label="Remove selected file">×</button>
+          </div>
+        </div>
+
+        <p id="error-message" class="error-message" role="alert" hidden></p>
+        <button id="analyze-button" class="analyze-button" type="submit" disabled>
+          <span class="button-label">Analyze Voice</span>
+          <span class="spinner" aria-hidden="true" hidden></span>
+        </button>
+      </form>
+
+      <section id="result-card" class="result-card" aria-live="polite" hidden>
+        <p class="result-eyebrow">Analysis complete</p>
+        <div id="result-icon" class="result-icon" aria-hidden="true"></div>
+        <h2 id="result-gender"></h2>
+        <p class="confidence-label">Confidence <strong id="confidence-value"></strong></p>
+        <div class="progress-track" role="progressbar" aria-label="Prediction confidence" aria-valuemin="0" aria-valuemax="100">
+          <div id="confidence-bar" class="progress-bar"></div>
+        </div>
+        <button id="try-another" class="try-another" type="button">Try Another</button>
+      </section>
+
+      <footer>Powered by <a href="https://www.vorextdigitalai.com" target="_blank" rel="noopener noreferrer">Vorext Digital AI</a></footer>
+    </section>
+  </main>
+</body>
+</html>

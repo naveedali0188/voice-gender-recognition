@@ -16,11 +16,12 @@ UPLOAD_DIR = BASE_DIR / "uploads"
 MODEL_PATH = BASE_DIR / "model" / "model.pkl"
 SCALER_PATH = BASE_DIR / "model" / "scaler.pkl"
 MAX_UPLOAD_BYTES = 16 * 1024 * 1024
+MAX_REQUEST_BYTES = MAX_UPLOAD_BYTES + 64 * 1024
 ALLOWED_EXTENSION = ".wav"
 
 logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
 app = Flask(__name__)
-app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
+app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_BYTES
 CORS(app)
 
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -55,6 +56,8 @@ def predict():
     upload_path = UPLOAD_DIR / f"{uuid.uuid4().hex}.wav"
     try:
         uploaded_file.save(upload_path)
+        if upload_path.stat().st_size > MAX_UPLOAD_BYTES:
+            return jsonify(error="The audio file exceeds the 16 MB limit."), 413
         features = extract_features(str(upload_path))
         probabilities = model.predict_proba(scaler.transform(features))[0]
         predicted_label = str(model.classes_[int(np.argmax(probabilities))]).lower()
